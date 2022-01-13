@@ -79,7 +79,7 @@ class SingleCycleITypeTesterLab2 extends CPUFlatSpec {
 class SingleCycleLoadTesterLab2 extends CPUFlatSpec {
 
   val tests = List[CPUTestCase](
-    InstTests.nameMap("lw1"), InstTests.nameMap("lwfwd")
+    InstTests.nameMap("ld1"), InstTests.nameMap("ld2"), InstTests.nameMap("ldfwd")
  )
   for (test <- tests) {
     "Single Cycle CPU" should s"run load instruction test ${test.binary}${test.extraName}" in {
@@ -125,7 +125,7 @@ class SingleCycleUTypeTesterLab2 extends CPUFlatSpec {
 class SingleCycleStoreTesterLab2 extends CPUFlatSpec {
 
   val tests = List[CPUTestCase](
-    InstTests.nameMap("sw")
+    InstTests.nameMap("sd1"), InstTests.nameMap("sd2")
  )
   for (test <- tests) {
   "Single Cycle CPU" should s"run add Store instruction test ${test.binary}${test.extraName}" in {
