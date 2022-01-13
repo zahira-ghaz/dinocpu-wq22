@@ -11,6 +11,7 @@ import chisel3.util._
  * Input:  aluop, 0 for ld/st, 1 for R-type
  * Input:  funct7, the most significant bits of the instruction
  * Input:  funct3, the middle three bits of the instruction (12-14)
+ * Input:  wordinst, True if the instruction *only* operates on 32-bit operands, False otherwise
  * Output: operation, What we want the ALU to do.
  *
  * For more information, see Section 4.4 and A.5 of Patterson and Hennessy.
