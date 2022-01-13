@@ -9,7 +9,7 @@ You can always create a copy of your git repo before beginning!
 ![ If that doesn't fix it, git.txt contains the phone number of a friend of mine who understands git. Just wait through a few minutes of 'It's really pretty simple, just think of branches as...' and eventually you'll learn the commands that will fix everything.](https://imgs.xkcd.com/comics/git.png)
 https://xkcd.com/1597/
 
-If you don't want to use your code from lab 1, but want to use my code to get started run the following git commands in the dinocpu/ directory:
+If you don't want to use your code from lab 1, but want to use my code to get started run the following git commands in the dinocpu-wq22/ directory:
 
 ```
 git checkout -b my-lab1-solution
@@ -20,7 +20,7 @@ git pull
 ```
 
 The commands above create a new branch (my-lab1-solution) and then commit all of your current outstanding changes to that branch.
-Then, it checks out the main branch and pulls the updates from the dinocpu repository (on jlpteaching).
+Then, it checks out the main branch and pulls the updates from the dinocpu-wq22 repository (on jlpteaching).
 
 If you have already committed things to main you can use the following:
 
@@ -32,7 +32,7 @@ git pull
 ```
 
 This creates a new branch (my-lab1-solution) then resets your main branch to be the same as the origin's main branch.
-Finally, it pulls any updates from the origin (jlpteaching/dinocpu, presumably).
+Finally, it pulls any updates from the origin (jlpteaching/dinocpu-wq22, presumably).
 
 If you want to use your own solution to lab 1 it's a little more complicated:
 
@@ -43,10 +43,10 @@ git fetch
 git merge origin/main
 ```
 
-This will merge the updates in origin (jlpteaching/dinocpu) into your main branch.
+This will merge the updates in origin (jlpteaching/dinocpu-wq22) into your main branch.
 **There will be merge conflicts** since both you and I modified cpu.scala and alucontrol.scala.
 You will have to decide how to deal with those conflicts.
 See https://help.github.com/articles/resolving-a-merge-conflict-using-the-command-line/ for more information.
 You could also do the same as the first two options to create a my-lab1-solution branch and set main to track origin/main directly then merge main with my-lab1-solution.
 
-There are many other ways to deal with this in git. These are the simplest that I could come up with off the top of my head. I'm happy to help out more in office hours if you get stuck. However, debugging git over piazza is going to be tough :). We'll do our best, though!
+There are many other ways to deal with this in git. These are the simplest that I could come up with off the top of my head. I'm happy to help out more in office hours if you get stuck. However, debugging git over Campuswire is going to be tough :). We'll do our best, though!
