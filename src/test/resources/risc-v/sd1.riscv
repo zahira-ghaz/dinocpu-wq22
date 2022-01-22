@@ -13,6 +13,10 @@ _start:
     nop
     nop
     li t3, 8
+    nop
+    nop
+    nop
+    nop
     ld t2, 0x400(t3)
     nop
     nop

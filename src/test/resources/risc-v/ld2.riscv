@@ -3,8 +3,12 @@
   .globl _start
 _start:
     li t1, 8
-    ld t0, 0x400(t1)
+    nop
+    nop
+    nop
+    nop
 
+    ld t0, 0x400(t1)
     nop
     nop
     nop
