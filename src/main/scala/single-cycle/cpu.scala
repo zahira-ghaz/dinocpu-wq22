@@ -21,13 +21,10 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   val alu        = Module(new ALU())
   val immGen     = Module(new ImmediateGenerator())
   val nextpc     = Module(new NextPC())
+  val pcAdder    = Module(new Adder())
   val (cycleCount, _) = Counter(true.B, 1 << 30)
 
   // Should be removed when wired are connected
-  control.io    := DontCare
-  registers.io  := DontCare
-  aluControl.io := DontCare
-  alu.io        := DontCare
   immGen.io     := DontCare
   nextpc.io     := DontCare
   io.dmem       := DontCare
@@ -38,7 +35,32 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
 
   val instruction = io.imem.instruction
 
-  // Your code goes here
+  control.io.opcode := instruction(6, 0)
+
+  registers.io.readreg1 := instruction(19, 15)
+  registers.io.readreg2 := instruction(24, 20)
+  registers.io.writereg := instruction(11, 7)
+  registers.io.writedata := alu.io.result
+  when (registers.io.writereg =/= 0.U) {
+    registers.io.wen := true.B
+  } .otherwise {
+    registers.io.wen := false.B
+  }
+
+
+  aluControl.io.aluop := true.B
+  aluControl.io.itype := false.B
+  aluControl.io.funct7 := instruction(31, 25)
+  aluControl.io.funct3 := instruction(14, 12)
+  aluControl.io.wordinst := control.io.wordinst
+
+  alu.io.operation := aluControl.io.operation
+  alu.io.inputx := registers.io.readdata1
+  alu.io.inputy := registers.io.readdata2
+
+  pcAdder.io.inputx := pc
+  pcAdder.io.inputy := 4.U
+  pc := pcAdder.io.result
 }
 
 /*

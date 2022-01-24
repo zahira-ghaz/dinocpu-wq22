@@ -28,8 +28,53 @@ class ALUControl extends Module {
     val operation = Output(UInt(5.W))
   })
 
-  // Your code goes here
-
-
-  io.operation := "b11111".U // invalid operation
+  when (io.funct3 === "b000".U) {
+    when (io.funct7 === "b0000000".U) {
+      when (io.wordinst) {
+        io.operation := "b10111".U // addw
+      } .otherwise {
+        io.operation := "b00111".U // add
+      }
+    } .elsewhen (io.funct7 === "b0100000".U) {
+	  when (io.wordinst) {
+        io.operation := "b10100".U // subw
+      } .otherwise {
+        io.operation := "b00100".U // sub
+      }
+    } .otherwise {
+      io.operation := "b11111".U // invalid operation
+    }
+  } .elsewhen (io.funct3 === "b001".U) {
+    when (io.wordinst) {
+      io.operation := "b11000".U // sllw
+    } .otherwise {
+      io.operation := "b01000".U // sll
+    }
+  } .elsewhen (io.funct3 === "b010".U) {
+    io.operation := "b01001".U // slt
+  } .elsewhen (io.funct3 === "b011".U) {
+    io.operation := "b00001".U // sltu
+  } .elsewhen (io.funct3 === "b100".U) {
+    io.operation := "b00000".U // xor
+  } .elsewhen (io.funct3 === "b101".U) {
+    when (io.funct7 === "b0000000".U) {
+      when (io.wordinst) {
+        io.operation := "b10010".U // srlw
+      } .otherwise {
+        io.operation := "b00010".U // srl
+      }
+    } .elsewhen (io.funct7 === "b0100000".U) {
+      when (io.wordinst) {
+        io.operation := "b10011".U // sraw
+      } .otherwise {
+        io.operation := "b00011".U // sra
+      }
+    } .otherwise {
+      io.operation := "b11111".U // invalid operation
+    }
+  } .elsewhen (io.funct3 === "b110".U) {
+    io.operation := "b00101".U // or
+  } .otherwise { // b111
+    io.operation := "b00110".U // and
+  }
 }
