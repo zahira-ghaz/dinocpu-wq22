@@ -55,7 +55,9 @@ class Control extends Module {
       BitPat("b0111011") -> List(false.B,  true.B, false.B,  0.U,  false.B,       0.U,      false.B,   0.U, false.B,   true.B,    true.B,   true.B),
       // Your code goes here for lab 2
       //I-type
-      //BitPat("b0010011") -> List(true.B,  true.B, false.B,  0.U,  false.B,       0.U,      false.B,   0.U, false.B,   true.B,    true.B,  false.B),
+      BitPat("b0010011") -> List(true.B,  true.B, false.B,  "b01".U,  false.B,       0.U,      true.B,   0.U, false.B,   true.B,    true.B,  false.B),
+      //32 bit operand for here?
+      BitPat("b0011011") -> List(true.B,  true.B, false.B,  "b01".U,  false.B,       0.U,      true.B,   0.U, false.B,   true.B,    true.B,   true.B),
       ) // Array
     ) // ListLookup
 

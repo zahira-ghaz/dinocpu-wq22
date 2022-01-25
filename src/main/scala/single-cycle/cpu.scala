@@ -56,6 +56,14 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
 
   alu.io.operation := aluControl.io.operation
   alu.io.inputx := registers.io.readdata1
+  //put mux here
+  when (control.io.src2 === "b00".U){
+    alu.io.inputy := registers.io.readdata2
+  }.elsewhen(control.io.src2 === "b01".U){
+    alu.io.inputy := immGen.io.sextImm
+  }.otherwise{
+    alu.io.inputy := "b11".U //later for jalr
+  }
   alu.io.inputy := registers.io.readdata2
 
   //pcAdder.io.inputx := pc
