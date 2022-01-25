@@ -21,7 +21,7 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   val alu        = Module(new ALU())
   val immGen     = Module(new ImmediateGenerator())
   val nextpc     = Module(new NextPC())
-  val pcAdder    = Module(new Adder())
+  //val pcAdder    = Module(new Adder())
   val (cycleCount, _) = Counter(true.B, 1 << 30)
 
   // Should be removed when wired are connected
@@ -42,7 +42,7 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   registers.io.writereg := instruction(11, 7)
   registers.io.writedata := alu.io.result
   when (registers.io.writereg =/= 0.U) {
-    registers.io.wen := control.io.wen //equal to write command from cpu if writereg is not equal to zero
+    registers.io.wen := control.io.regwrite//equal to write command from cpu if writereg is not equal to zero
   } .otherwise {
     registers.io.wen := false.B
   }
@@ -63,7 +63,7 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   //pc := pcAdder.io.result
 
   nextpc.io.funct3 := instruction(14, 12)
-  nextpc.io.jumptype := control.io.jumpType
+  nextpc.io.jumptype := control.io.jumptype
   nextpc.io.inputx := registers.io.readdata1
   nextpc.io.inputy := registers.io.readdata2
   nextpc.io.pc := pc
