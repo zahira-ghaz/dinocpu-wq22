@@ -66,6 +66,12 @@ class Control extends Module {
       BitPat("b0010111") -> List(true.B,  true.B, true.B,  "b01".U,  false.B,       0.U,     false.B,   "b00".U, false.B,   true.B,    true.B,   false.B),
       //sd instr
       BitPat("b0100011") -> List(true.B,  true.B, false.B,  "b01".U,  false.B,       0.U,      false.B,   "b11".U, true.B,   false.B,    true.B,   false.B),
+      //branch instr
+      BitPat("b1100011") -> List(true.B,  true.B, false.B,  "b01".U,  true.B,       0.U,      false.B,   0.U, true.B,   false.B,    true.B,   false.B),
+      //jal
+      BitPat("b1101111") -> List(true.B,  true.B, false.B,  "b01".U,  true.B,       0.U,      false.B,   0.U, true.B,   false.B,    true.B,   false.B),
+      //jalr
+      BitPat("b1100111") -> List(true.B,  true.B, false.B,  "b01".U,  true.B,       0.U,      false.B,   0.U, true.B,   false.B,    true.B,   false.B),
       ) // Array
     ) // ListLookup
 

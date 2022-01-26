@@ -33,8 +33,65 @@ class NextPC extends Module {
     val taken    = Output(Bool())
   })
 
-  io.nextpc := io.pc + 4.U
-  io.taken  := false.B
+    //make condition for when to use branch
+
+  when (io.funct3=== "b000".U){
+    when (io.inputx === io.inputy){
+      io.nextpc := io.pc + io.imm
+      io.taken := true.B
+    }.otherwise{
+      io.nextpc := io.pc + 4.U
+      io.taken  := false.B
+    }
+  }.elsewhen(io.funct3 ==="b001".U){
+    when (io.inputx =/= io.inputy){
+      io.nextpc := io.pc + io.imm
+      io.taken := true.B
+    }.otherwise{
+      io.nextpc := io.pc + 4.U
+      io.taken  := false.B
+    }
+  }.elsewhen(io.funct3 === "b100".U){
+    when (io.inputx.asSInt < io.inputy.asSInt){
+      io.nextpc := io.pc + io.imm
+      io.taken := true.B
+    }.otherwise{
+      io.nextpc := io.pc + 4.U
+      io.taken  := false.B
+    }
+  }.elsewhen(io.funct3 === "b101".U){
+    when (io.inputx.asSInt > io.inputy.asSInt){
+      io.nextpc := io.pc + io.imm
+      io.taken := true.B
+    }.elsewhen(io.inputx.asSInt === io.inputy.asSInt){
+      io.nextpc := io.pc + io.imm
+      io.taken := true.B
+    }.otherwise{
+      io.nextpc := io.pc + 4.U
+      io.taken  := false.B
+    }
+  }.elsewhen(io.funct3 === "b110".U){
+    when (io.inputx < io.inputy){
+      io.nextpc := io.pc + io.imm
+      io.taken := true.B
+    }.otherwise{
+      io.nextpc := io.pc + 4.U
+      io.taken  := false.B
+    }
+  }.otherwise{
+    when (io.inputx > io.inputy){
+      io.nextpc := io.pc + io.imm
+      io.taken := true.B
+    }.elsewhen(io.inputx === io.inputy){
+      io.nextpc := io.pc + io.imm
+      io.taken := true.B
+    }.otherwise{
+      io.nextpc := io.pc + 4.U
+      io.taken  := false.B
+    }
+  }
+  
+
 
   // Your code goes here
 }

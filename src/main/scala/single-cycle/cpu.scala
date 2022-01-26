@@ -5,6 +5,7 @@ package dinocpu
 import chisel3._
 import chisel3.util._
 import dinocpu.components._
+import scala.annotation.switch
 
 /**
  * The main CPU definition that hooks up all of the other components.
@@ -34,6 +35,7 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   io.imem.valid := true.B
 
   val instruction = io.imem.instruction
+
   //CONTROL
   control.io.opcode := instruction(6, 0)
 
@@ -88,7 +90,7 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   nextpc.io.inputx := registers.io.readdata1
   nextpc.io.inputy := registers.io.readdata2
   nextpc.io.pc := pc
-  nextpc.io.branch := false.B //for now
+  nextpc.io.branch := control.io.branch //for now
   nextpc.io.imm := immGen.io.sextImm
 
   immGen.io.instruction := io.imem.instruction
@@ -117,6 +119,7 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   io.dmem.valid := true.B
   when (control.io.opcode === "b0000011".U ){
     alu.io.operation := "b00111".U //manually alters funct 3 for alucontrol tho theres gotta be a way to do without this
+    
   }.elsewhen (control.io.opcode ==="b0010111".U){
     //for u types
     alu.io.operation := "b00111".U 
