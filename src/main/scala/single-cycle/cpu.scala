@@ -95,24 +95,44 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
 
   //dmem
   io.dmem.address := alu.io.result
-  io.dmem.maskmode := instruction(14, 12)
+  when (instruction (14, 12) < 4.U){
+    io.dmem.maskmode := instruction(14, 12)
+  }.otherwise{
+    val actual_mask = instruction(14, 12) - 4.U
+    io.dmem.maskmode := actual_mask
+  }
+  
   io.dmem.sext := instruction (14, 12)
   io.dmem.writedata := registers.io.readdata2
   when (control.io.memop === 2.U){
     io.dmem.memread := true.B
     io.dmem.memwrite := false.B
-  }.otherwise{
+  }.elsewhen (control.io.memop ===3.U){
     io.dmem.memread := false.B
     io.dmem.memwrite := true.B
+  }.otherwise{
+    io.dmem.memread := false.B
+    io.dmem.memwrite := false.B
   }
   io.dmem.valid := true.B
-  when (control.io.opcode === "b0000011".U){
-    aluControl.io.funct3 := "b000".U //manually alters funct 3 for alucontrol tho theres gotta be a way to do without this
+  when (control.io.opcode === "b0000011".U ){
+    alu.io.operation := "b00111".U //manually alters funct 3 for alucontrol tho theres gotta be a way to do without this
   }.elsewhen (control.io.opcode ==="b0010111".U){
-    aluControl.io.funct3 := "b000".U //manually altering so we can add
-    aluControl.io.funct7 := "b0010111".U //literally giving the opcode so we can avoid ugly stuff with jump commands
+    //for u types
+    alu.io.operation := "b00111".U 
+    alu.io.inputx := pc
+    alu.io.inputy := immGen.io.sextImm
+    registers.io.writereg := instruction (11, 7)
+    registers.io.writedata := alu.io.result
+  }.elsewhen (control.io.opcode === "b0100011".U){
+    alu.io.operation := "b00111".U
+    //alu.io.inputx := registers.io.readdata1
+    //alu.io.inputy := immGen.io.sextImm
+    //registers.io.writereg := instruction (24, 20)
+    ///io.dmem.address := alu.io.result
+    //registers.io.writedata := io.dmem.readdata
   }
-
+  
 
 
   pc := nextpc.io.nextpc //connecting next pc to pc

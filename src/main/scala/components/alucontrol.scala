@@ -27,6 +27,7 @@ class ALUControl extends Module {
 
     val operation = Output(UInt(5.W))
   })
+    //exceptional case for u type 
     when (io.funct3 === "b000".U) {
       when (io.funct7 === "b0000000".U) {
         when (io.wordinst) {
