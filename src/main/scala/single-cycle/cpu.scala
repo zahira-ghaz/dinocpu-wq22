@@ -27,7 +27,7 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   // Should be removed when wired are connected
   //immGen.io     := DontCare
   //nextpc.io     := DontCare
-  io.dmem       := DontCare
+  //io.dmem       := DontCare
 
   //FETCH
   io.imem.address := pc
@@ -40,7 +40,16 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   registers.io.readreg1 := instruction(19, 15)
   registers.io.readreg2 := instruction(24, 20)
   registers.io.writereg := instruction(11, 7)
-  registers.io.writedata := alu.io.result
+  when(control.io.toreg){
+    registers.io.writedata := io.dmem.readdata
+  }.otherwise{
+    when (control.io.resultselect){
+      registers.io.writedata := immGen.io.sextImm
+    }.otherwise{
+      registers.io.writedata := alu.io.result
+    }
+  }
+  //registers.io.writedata := alu.io.result
   when (registers.io.writereg =/= 0.U) {
     registers.io.wen := control.io.regwrite//equal to write command from cpu if writereg is not equal to zero
   } .otherwise {
@@ -55,16 +64,20 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   aluControl.io.wordinst := control.io.wordinst
 
   alu.io.operation := aluControl.io.operation
+  when (control.io.src1){
+    alu.io.inputx := pc
+  }.otherwise{
   alu.io.inputx := registers.io.readdata1
+  }
   //put mux here
   when (control.io.src2 === "b00".U){
     alu.io.inputy := registers.io.readdata2
   }.elsewhen(control.io.src2 === "b01".U){
     alu.io.inputy := immGen.io.sextImm
   }.otherwise{
-    alu.io.inputy := "b11".U //later for jalr
+    alu.io.inputy := 4.U //hardwire to 4
   }
-  alu.io.inputy := registers.io.readdata2
+  //alu.io.inputy := registers.io.readdata2
 
   //pcAdder.io.inputx := pc
   //pcAdder.io.inputy := 4.U
@@ -79,6 +92,28 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   nextpc.io.imm := immGen.io.sextImm
 
   immGen.io.instruction := io.imem.instruction
+
+  //dmem
+  io.dmem.address := alu.io.result
+  io.dmem.maskmode := instruction(14, 12)
+  io.dmem.sext := instruction (14, 12)
+  io.dmem.writedata := registers.io.readdata2
+  when (control.io.memop === 2.U){
+    io.dmem.memread := true.B
+    io.dmem.memwrite := false.B
+  }.otherwise{
+    io.dmem.memread := false.B
+    io.dmem.memwrite := true.B
+  }
+  io.dmem.valid := true.B
+  when (control.io.opcode === "b0000011".U){
+    aluControl.io.funct3 := "b000".U //manually alters funct 3 for alucontrol tho theres gotta be a way to do without this
+  }.elsewhen (control.io.opcode ==="b0010111".U){
+    aluControl.io.funct3 := "b000".U //manually altering so we can add
+    aluControl.io.funct7 := "b0010111".U //literally giving the opcode so we can avoid ugly stuff with jump commands
+  }
+
+
 
   pc := nextpc.io.nextpc //connecting next pc to pc
 }
