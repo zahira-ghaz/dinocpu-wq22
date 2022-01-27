@@ -35,7 +35,8 @@ class NextPC extends Module {
 
     //make condition for when to use branch
   when (io.jumptype === 0.U){
-  when (io.funct3=== "b000".U){
+    when (io.branch){
+      when (io.funct3=== "b000".U){
     when (io.inputx === io.inputy){
       io.nextpc := io.pc + io.imm
       io.taken := true.B
@@ -93,6 +94,11 @@ class NextPC extends Module {
       io.taken  := false.B
     }
   }
+    }.otherwise{
+      io.nextpc := io.pc + 4.U
+      io.taken  := false.B
+    }
+  
   
   }.elsewhen(io.jumptype=== "b10".U){ //jal
     io.nextpc := io.pc + io.imm
