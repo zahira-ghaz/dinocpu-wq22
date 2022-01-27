@@ -135,7 +135,22 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
     ///io.dmem.address := alu.io.result
     //registers.io.writedata := io.dmem.readdata
   }
-  
+  when (nextpc.io.jumptype === "b10".U){
+    //jalr
+    //nextpc.io.inputx := pc
+    //nextpc.io.inputy := immGen.io.sextImm
+    //registers.io.writereg := instruction (11, 7)
+
+    alu.io.operation := "b00111".U
+    //nextpc.io.funct3 := "b010".U
+    //registers.io.writedata := alu.io.result
+  }.elsewhen(nextpc.io.jumptype === "b11".U){
+    //jalr
+    //nextpc.io.inputx := pc
+    //nextpc.io.inputy := immGen.io.sextImm
+    //registers.io.writereg := instruction (11, 7)
+    alu.io.operation := "b00111".U
+  }
 
 
   pc := nextpc.io.nextpc //connecting next pc to pc
