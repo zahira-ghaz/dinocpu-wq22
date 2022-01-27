@@ -43,7 +43,7 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   registers.io.readreg2 := instruction(24, 20)
   registers.io.writereg := instruction(11, 7)
   when(control.io.toreg){
-    registers.io.writedata := io.dmem.readdata
+    registers.io.writedata := io.dmem.readdata//.asSInt
   }.otherwise{
     when (control.io.resultselect){
       registers.io.writedata := immGen.io.sextImm
@@ -102,6 +102,7 @@ class SingleCycleCPU(implicit val conf: CPUConfig) extends BaseCPU {
   }.otherwise{
     val actual_mask = instruction(14, 12) - 4.U
     io.dmem.maskmode := actual_mask
+
   }
   
   io.dmem.sext := instruction (14, 12)
