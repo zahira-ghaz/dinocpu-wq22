@@ -22,7 +22,7 @@ _start:
 ```
 
 ## STEP 0: Install Toolchain
-Visit https://github.com/riscv/riscv-gnu-toolchain to install the cross-compiler toolchain. Configure the 64-bit version with `--with-abi=ilp64` (software emulated floating point) and `--with-arch=rv64i`(integer ISA only). You can add supported extensions if you've extended dinocpu to support those instructions. Make sure to install the 64-bit version.
+Visit https://github.com/riscv/riscv-gnu-toolchain to install the cross-compiler toolchain. Configure the 64-bit version with `--with-abi=lp64` (software emulated floating point) and `--with-arch=rv64i`(integer ISA only). You can add supported extensions if you've extended dinocpu to support those instructions. Make sure to install the 64-bit version.
 
 ## STEP 1: Assemble
 
